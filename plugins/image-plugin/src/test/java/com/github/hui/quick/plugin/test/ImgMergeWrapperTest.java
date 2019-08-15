@@ -33,6 +33,7 @@ public class ImgMergeWrapperTest {
 
     @Test
     public void test() throws IOException {
+        //第三个参数 位深度
         BufferedImage bufferedImage = new BufferedImage(100,200, BufferedImage.TYPE_BYTE_BINARY);
 
         Long start = System.currentTimeMillis();
