@@ -18,6 +18,7 @@ import org.junit.Test;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,6 +29,62 @@ import java.util.List;
  * Created by yihui on 2017/10/13.
  */
 public class ImgMergeWrapperTest {
+
+
+    @Test
+    public void test() throws IOException {
+        BufferedImage bufferedImage = new BufferedImage(100,200, BufferedImage.TYPE_BYTE_BINARY);
+
+        Long start = System.currentTimeMillis();
+        BufferedImage logo = ImageLoadUtil.getImageByPath("plan.jpg");
+        BufferedImage qrCode = ImageLoadUtil.getImageByPath("123.jpg");
+        //图片高宽
+        int lw = logo.getHeight();
+        int lh = logo.getWidth();
+        //位深度
+        int ld = logo.getColorModel().getPixelSize();
+
+
+        DataBuffer lData = logo.getData().getDataBuffer();
+        int qh = qrCode.getHeight();
+        int qw = qrCode.getWidth();
+        int qd = qrCode.getColorModel().getPixelSize();
+        DataBuffer qData = qrCode.getData().getDataBuffer();
+
+
+        BufferedImage logo1 = ImageLoadUtil.getImageByPath("logo.jpg");
+        BufferedImage qrCode1 = ImageLoadUtil.getImageByPath("QrCode.jpg");
+
+
+
+        List<BufferedImage> images = new ArrayList<>();
+        images.add(logo);
+        images.add(qrCode);
+        //images.add(logo);
+        //images.add(qrCode);
+
+
+        int y = 0;
+        int w = 0;
+        List<IMergeCell> list = new ArrayList<>();
+        for (BufferedImage image : images){
+            IMergeCell cell = QrCodeCardTemplateBuilder.buildImg(image , y);
+            y = y + image.getHeight();
+            list.add(cell);
+            w = image.getWidth() > w ? image.getWidth() : w;
+        }
+
+        BufferedImage bg = ImgMergeWrapper.merge(list, w, y);
+
+        try {
+            ImageIO.write(bg, "jpg", new File("./merge.jpg"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(System.currentTimeMillis() - start);
+    }
+
 
     @Test
     public void testCell() throws IOException {

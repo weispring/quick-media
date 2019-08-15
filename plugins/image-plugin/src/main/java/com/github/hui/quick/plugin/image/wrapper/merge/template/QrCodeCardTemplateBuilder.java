@@ -38,6 +38,19 @@ public class QrCodeCardTemplateBuilder {
         return list;
     }
 
+    public static ImgCell buildImg(BufferedImage logo,int y) {
+        // logo
+        //logo = ImageOperateUtil.makeRoundBorder(logo, 0, null);
+        return ImgCell.builder()
+                .img(logo)
+                .x(0)
+                .y(y)
+                .w(logo.getWidth())
+                .h(logo.getHeight())
+                .build();
+    }
+
+
     private static RectFillCell buildBg() {
         RectFillCell rectFillCell = RectFillCell.builder()
                 .w(QrCodeCardTemplate.w)
